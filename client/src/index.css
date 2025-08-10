@@ -1,1 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Jersey+15&family=Outfit:wght@100..900&display=swap");
 @import "tailwindcss";
+* {
+  font: outfit;
+}
