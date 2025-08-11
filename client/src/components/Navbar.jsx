@@ -1,9 +1,10 @@
-import React from "react";
-import { assets } from "../assets/assets"; // Assuming assets is an object with logo and other assets
+import React, { useContext } from "react";
+import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  // true pe first div // null pe second div at line 14
+  const { user } = useContext(AppContext); // true pe first div // null pe second div at line 14
   const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center py-4">
