@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { user } = useContext(AppContext); // true pe first div // null pe second div at line 14
@@ -14,7 +14,10 @@ const Navbar = () => {
       <div>
         {user ? (
           <div className="flex items-center gap-2 sm:gap-3">
-            <button className="flex items-center gap-2 bg-blue-100 px-4 sm:px-6 py-1.5  sm:py-3 rounded-full hover:scale-105 transition-all duration-700">
+            <button
+              onClick={() => navigate("/buy")}
+              className="flex items-center gap-2 bg-blue-100 px-4 sm:px-6 py-1.5  sm:py-3 rounded-full hover:scale-105 transition-all duration-700"
+            >
               <img className="w-10" src={assets.credit_star} alt="" />
               <p className="text-xs sm:text-sm font-medium text-gray-600">
                 Credit left : 30

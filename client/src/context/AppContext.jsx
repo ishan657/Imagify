@@ -1,9 +1,10 @@
 import { createContext, useState } from "react";
 
-export const AppContext = createContext(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(true);
 
   const value = {
     user,
