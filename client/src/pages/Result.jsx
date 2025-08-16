@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
+import { motion as Motion } from "framer-motion";
 
 const Result = () => {
   const [image, setImage] = useState(assets.sample_img_1);
   const [isImageLoaded, setIsImageLoaded] = useState(true);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
-  const onSubmitHandler = async (e) => {};
+  // const onSubmitHandler = async (e) => {
+  // };
   return (
-    <form
-      onSubmit={onSubmitHandler}
+    <Motion.form
+      initial={{ opacity: 0.2, y: 100 }}
+      transition={{ duration: 1 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      // onSubmit={onSubmitHandler}
       action=""
       className="flex flex-col items-center justify-center min-h-[90vh]"
     >
@@ -58,7 +64,7 @@ const Result = () => {
           </a>
         </div>
       )}
-    </form>
+    </Motion.form>
   );
 };
 

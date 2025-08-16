@@ -1,0 +1,12 @@
+ i have installed certain library and dependencies for easier work 
+ express: 
+ cors: to connect backend with frontend
+ dotenv: to safely store api keys
+ nodemon: to restart server everytime i make some changes
+ form-data:
+ jsonwebtoken: for login authentication
+ mongoose: as database 
+ axios: for all API calls 
+ bcrypt:
+ razorpay: to add payment method
+
