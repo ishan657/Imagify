@@ -10,3 +10,9 @@
  bcrypt:
  razorpay: to add payment method
 
+
+    //JWT creating a webtoken    2 arguements are there user id and secret key in .env
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    You write user’s ID on a paper 📝.
+    You put it in an envelope.
+    You seal it with a secret wax stamp 🔒 that only your server knows.
