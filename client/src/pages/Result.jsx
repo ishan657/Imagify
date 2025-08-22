@@ -1,21 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { motion as Motion } from "framer-motion";
+import { AppContext } from "../context/AppContext";
 
 const Result = () => {
   const [image, setImage] = useState(assets.sample_img_1);
-  const [isImageLoaded, setIsImageLoaded] = useState(true);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
-  // const onSubmitHandler = async (e) => {
-  // };
+  const { generateImage } = useContext(AppContext);
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    if (input) {
+      const image = await generateImage(input);
+      if (image) {
+        setIsImageLoaded(true);
+        setImage(image);
+      }
+    }
+    setLoading(false);
+  };
   return (
     <Motion.form
       initial={{ opacity: 0.2, y: 100 }}
       transition={{ duration: 1 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      // onSubmit={onSubmitHandler}
+      onSubmit={onSubmitHandler}
       action=""
       className="flex flex-col items-center justify-center min-h-[90vh]"
     >
@@ -28,11 +41,11 @@ const Result = () => {
         </div>
         <p className={!loading ? "hidden" : ""}>Loading.....</p>
       </div>
-      {isImageLoaded && ( //js function to check if image is loaded while not loaded keep the input visible
+      {!isImageLoaded && ( //js function to check if image is loaded while not loaded keep the input visible
         <div className="flex w-full max-w-xl bg-neutral-500 text-white text-sm p-0.5 mt-10 rounded-full">
           <input
-            onChange={(e) => setInput(e.target.value)}
             value={input}
+            onChange={(e) => setInput(e.target.value)}
             type="text"
             placeholder="Describe what you want to generate"
             className="flex-1 bg-transparent outline-none ml-8 max-sm:w-20 placeholder-color"

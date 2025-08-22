@@ -7,10 +7,11 @@ const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
       return res
-        .status(400) // ✅ fixed wrong .json(400).json() chain
+        .status(400) //
         .json({ success: false, message: "Please fill all fields" });
     }
 
+    // use of bcrypt to hash the password
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
@@ -58,7 +59,7 @@ const loginUser = async (req, res) => {
       });
     } else {
       return res
-        .status(400) // ✅ fixed missing .status()
+        .status(400) 
         .json({ success: false, message: "Invalid credentials" });
     }
   } catch (error) {
@@ -69,7 +70,7 @@ const loginUser = async (req, res) => {
 
 const userCredits = async (req, res) => {
   try {
-    const userId = req.userId; // ✅ fixed here
+    const userId = req.userId; 
     const user = await userModel.findById(userId);
 
     res.json({

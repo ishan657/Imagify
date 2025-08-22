@@ -4,7 +4,7 @@ import { AppContext } from "../context/AppContext";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const { user, setShowLogin } = useContext(AppContext); // true pe first div // null pe second div at line 14
+  const { user, setShowLogin, logout, credit } = useContext(AppContext); // true pe first div // null pe second div at line 14
   const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center py-4">
@@ -20,10 +20,10 @@ const Navbar = () => {
             >
               <img className="w-10" src={assets.credit_star} alt="" />
               <p className="text-xs sm:text-sm font-medium text-gray-600">
-                Credit left : 30
+                Credit left : {credit}
               </p>
             </button>
-            <p className="text-gray-600 max-sm:hidden pl-4">Hi , User</p>
+            <p className="text-gray-600 max-sm:hidden pl-4">Hi , {user.name}</p>
             <div className="relative group">
               <img
                 className="w-10 drop-shadow"
@@ -32,7 +32,12 @@ const Navbar = () => {
               />
               <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12">
                 <ul className="list-none m-0 p-2 bg-white rounded-md text-sm">
-                  <li className="py-1 px-2 cursor-pointer pr-10">Logout</li>
+                  <li
+                    onClick={logout}
+                    className="py-1 px-2 cursor-pointer pr-10"
+                  >
+                    Logout
+                  </li>
                 </ul>
               </div>
             </div>
