@@ -13,7 +13,7 @@ app.use(
   cors({
     origin: "https://imagify-frontend-z3y4.onrender.com", // frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"], // allow JWT token
+    allowedHeaders: ["Content-Type", "Authorization", "token"], // allow JWT token
   })
 );
 
