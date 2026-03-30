@@ -87,7 +87,7 @@ const Login = () => {
           <img alt="" src={assets.email_icon} className="" />
           <input
             onChange={(e) => setEmail(e.target.value)}
-            type="text"
+            type="email"
             placeholder="Email id"
             required
             className="outline-none text-sm"
