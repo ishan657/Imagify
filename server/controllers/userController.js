@@ -186,27 +186,56 @@ const paymentRazorpay = async (req, res) => {
 const verifyRazorpay = async (req, res) => {
   try {
     const { razorpay_order_id } = req.body;
-    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
-    if (orderInfo.status == "paid") {
+
+    const orderInfo = await razorpayInstance.orders.fetch(
+      razorpay_order_id
+    );
+
+    if (orderInfo.status === "paid") {
       const transactionData = await transactionModel.findById(
         orderInfo.receipt
       );
+
+      // ✅ already processed
       if (transactionData.payment) {
-        return res.json({ sucess: false, message: "Payment Failed" });
+        return res.json({
+          success: true,
+          message: "Already credited",
+        });
       }
-      const userData = await userModel.findby(transactionData.userId);
-      const creditBalance = userData.creditBalance + transactionData.credits;
-      await userModel.findByIdAndUpdate(userData._Id, { creditBalance });
-      await transactionModel.findOneAndUpdate(transactionData._id, {
+
+      // ✅ FIXED
+      const userData = await userModel.findById(transactionData.userId);
+
+      const creditBalance =
+        userData.creditBalance + transactionData.credits;
+
+      // ✅ FIXED
+      await userModel.findByIdAndUpdate(userData._id, {
+        creditBalance,
+      });
+
+      // ✅ FIXED
+      await transactionModel.findByIdAndUpdate(transactionData._id, {
         payment: true,
       });
-      res.json({ success: true, message: "Credits Added" });
+
+      return res.json({
+        success: true,
+        message: "Credits Added",
+      });
     } else {
-      res.json({ success: false, message: "Payment Failed" });
+      return res.json({
+        success: false,
+        message: "Payment not completed",
+      });
     }
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.log("VERIFY ERROR:", error);
+    return res.json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 export {
