@@ -4,54 +4,82 @@ import FormData from "form-data";
 
 const generateImage = async (req, res) => {
   try {
-    const { prompt } = req.body; // ✅ only prompt comes from body
-    const userId = req.userId; // ✅ now use userId from middleware
+    const { prompt } = req.body;
+    const userId = req.userId;
+
+    // ✅ validate input
+    if (!prompt || prompt.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Prompt is required",
+      });
+    }
 
     const user = await userModel.findById(userId);
-    if (!user || !prompt) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Missing Details" });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
     if (user.creditBalance <= 0) {
-      return res.json({
+      return res.status(400).json({
         success: false,
-        message: "NO credits left",
+        message: "No credits left",
         creditBalance: user.creditBalance,
       });
     }
+
     const formData = new FormData();
     formData.append("prompt", prompt);
 
-    const { data } = await axios.post(
-      "https://clipdrop-api.co/text-to-image/v1",
-      formData,
-      {
-        headers: {
-          "x-api-key": process.env.API_KEY,
-          ...formData.getHeaders(),
-        },
-        responseType: "arraybuffer",
-      }
-    );
+    // ✅ call external API safely
+    let apiResponse;
+    try {
+      apiResponse = await axios.post(
+        "https://clipdrop-api.co/text-to-image/v1",
+        formData,
+        {
+          headers: {
+            "x-api-key": process.env.API_KEY,
+            ...formData.getHeaders(),
+          },
+          responseType: "arraybuffer",
+        }
+      );
+    } catch (apiError) {
+      return res.status(500).json({
+        success: false,
+        message: "Image generation failed",
+      });
+    }
 
-    const base64Image = Buffer.from(data, "binary").toString("base64");
+    // ✅ convert image
+    const base64Image = Buffer.from(apiResponse.data, "binary").toString("base64");
     const resultImage = `data:image/png;base64,${base64Image}`;
 
-    await userModel.findByIdAndUpdate(userId, {
-      creditBalance: user.creditBalance - 1,
-    });
+    // ✅ atomic update (VERY IMPORTANT 🔥)
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      { $inc: { creditBalance: -1 } },
+      { new: true }
+    );
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Image Generated",
-      creditBalance: user.creditBalance - 1,
+      creditBalance: updatedUser.creditBalance,
       resultImage,
     });
+
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
 
