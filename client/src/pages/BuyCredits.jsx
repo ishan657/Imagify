@@ -33,7 +33,11 @@ const BuyCredits = () => {
           const { data } = await axios.post(
             backendUrl + "/api/user/verify-razor",
             response,
-            { headers: { token } }
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
           );
           if (data.success) {
             loadCreditsData();
@@ -89,7 +93,7 @@ const BuyCredits = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (data.success) {
